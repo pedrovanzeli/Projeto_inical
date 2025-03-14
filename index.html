@@ -1,49 +1,75 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apontamento de Serviço</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulário de Apontamento</title>
 </head>
 <body>
-    <h2>Enviar Apontamento</h2>
-    <form id="apontamentoForm">
-        <label>Número da Ordem:</label> <input type="text" id="numeroOrdem"><br>
-        <label>Descrição do Serviço:</label> <input type="text" id="descricaoServico"><br>
-        <label>Setor:</label> <input type="text" id="setor"><br>
-        <label>Manutentor:</label> <input type="text" id="manutentor"><br>
-        <label>Centro de Trabalho:</label> <input type="text" id="centroTrabalho"><br>
-        <label>Ordem Concluída?</label> <input type="text" id="ordemConcluida"><br>
-        <label>Observações:</label> <input type="text" id="observacoes"><br>
-        <label>Início:</label> <input type="text" id="inicio"><br>
-        <label>Fim:</label> <input type="text" id="fim"><br>
-        <button type="button" onclick="enviarApontamento()">Enviar</button>
-    </form>
+  <h1>Formulário de Apontamento de Serviço</h1>
 
-    <script>
-        function enviarApontamento() {
-            var url = "https://script.google.com/macros/s/AKfycbzfhyGMlKrjby2PoiBvzkjx7RlTXT-y-0rxi0eUWT8n7T_VzJpQI0NXgD0ypbhAuOLf/exec"; // URL do seu Apps Script
+  <form id="apontamentoForm">
+    <label for="numeroOrdem">Número da Ordem:</label>
+    <input type="text" id="numeroOrdem" name="numeroOrdem" required><br><br>
 
-            var dados = {
-                numeroOrdem: document.getElementById("numeroOrdem").value,
-                descricaoServico: document.getElementById("descricaoServico").value,
-                setor: document.getElementById("setor").value,
-                manutentor: document.getElementById("manutentor").value,
-                centroTrabalho: document.getElementById("centroTrabalho").value,
-                ordemConcluida: document.getElementById("ordemConcluida").value,
-                observacoes: document.getElementById("observacoes").value,
-                inicio: document.getElementById("inicio").value,
-                fim: document.getElementById("fim").value
-            };
+    <label for="descricaoServico">Descrição do Serviço:</label>
+    <input type="text" id="descricaoServico" name="descricaoServico" required><br><br>
 
-            fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dados)
-            }).then(response => response.json())
-              .then(data => alert("Apontamento enviado!"))
-              .catch(error => alert("Erro ao enviar apontamento: " + error));
+    <label for="setor">Setor:</label>
+    <input type="text" id="setor" name="setor"><br><br>
+
+    <label for="manutentor">Manutentor:</label>
+    <input type="text" id="manutentor" name="manutentor"><br><br>
+
+    <label for="centroTrabalho">Centro de Trabalho:</label>
+    <input type="text" id="centroTrabalho" name="centroTrabalho"><br><br>
+
+    <label for="ordemConcluida">Ordem Concluída?</label>
+    <input type="text" id="ordemConcluida" name="ordemConcluida"><br><br>
+
+    <label for="observacoes">Observações:</label>
+    <textarea id="observacoes" name="observacoes"></textarea><br><br>
+
+    <label for="inicio">Início:</label>
+    <input type="datetime-local" id="inicio" name="inicio" required><br><br>
+
+    <label for="fim">Fim:</label>
+    <input type="datetime-local" id="fim" name="fim" required><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    document.getElementById('apontamentoForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Coletar os dados do formulário
+      var formData = new FormData(e.target);
+      var data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      // Enviar os dados para o Apps Script
+      fetch('https://script.google.com/macros/s/AKfycbzfhyGMlKrjby2PoiBvzkjx7RlTXT-y-0rxi0eUWT8n7T_VzJpQI0NXgD0ypbhAuOLf/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result === 'success') {
+          alert('Apontamento enviado com sucesso!');
+        } else {
+          alert('Erro ao enviar apontamento: ' + (data.error || 'Desconhecido'));
         }
-    </script>
+      })
+      .catch(error => {
+        alert('Erro ao enviar dados: ' + error);
+      });
+    });
+  </script>
 </body>
 </html>
