@@ -22,7 +22,7 @@
 
     <script>
         function enviarApontamento() {
-            var url = "https://script.google.com/macros/s/AKfycbzfhyGMlKrjby2PoiBvzkjx7RlTXT-y-0rxi0eUWT8n7T_VzJpQI0NXgD0ypbhAuOLf/exec"; // Substitua pela URL gerada no Apps Script
+            var url = "https://script.google.com/macros/s/AKfycbzfhyGMlKrjby2PoiBvzkjx7RlTXT-y-0rxi0eUWT8n7T_VzJpQI0NXgD0ypbhAuOLf/exec"; // URL do seu Apps Script
 
             var dados = {
                 numeroOrdem: document.getElementById("numeroOrdem").value,
@@ -38,10 +38,11 @@
 
             fetch(url, {
                 method: "POST",
-                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dados)
-            }).then(() => alert("Apontamento enviado!"));
+            }).then(response => response.json())
+              .then(data => alert("Apontamento enviado!"))
+              .catch(error => alert("Erro ao enviar apontamento: " + error));
         }
     </script>
 </body>
